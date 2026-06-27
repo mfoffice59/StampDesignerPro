@@ -1,0 +1,60 @@
+КАК ПОЛУЧИТЬ ГОТОВЫЙ StampDesigner.exe
+
+ВАРИАНТ 1 - проще всего, через GitHub Actions
+
+1. Создайте новый репозиторий на GitHub.
+2. Загрузите туда все файлы из этой папки:
+   - StampDesigner.csproj
+   - Program.cs
+   - StampDesignerForm.cs
+   - build-win-x64.bat
+   - README.txt
+   - README_RELEASE.txt
+   - папку .github
+
+3. Откройте вкладку Actions.
+4. Выберите workflow:
+   Build StampDesigner Windows EXE
+5. Нажмите Run workflow.
+6. После завершения сборки скачайте Artifact:
+   StampDesigner-Windows-Portable
+7. Внутри будет готовый StampDesigner.exe.
+
+ВАРИАНТ 2 - локально на Windows
+
+1. Установите .NET 8 SDK:
+   https://dotnet.microsoft.com/download
+
+2. Распакуйте эту папку.
+
+3. Запустите:
+   build-win-x64.bat
+
+4. Готовый EXE появится здесь:
+   bin\Release\net8.0-windows\win-x64\publish\StampDesigner.exe
+
+ЧТО УЖЕ ЕСТЬ В ПРОГРАММЕ
+
+- Настоящее Windows-приложение.
+- Генератор круглого штампа.
+- Шаблоны для Узбекистана.
+- Шаблон ООО на русском.
+- Шаблон YATT.
+- Широкая синяя внешняя полоса с белым текстом.
+- Загрузка логотипа.
+- Перемещение логотипа мышью.
+- Регулируемый мягкий ластик.
+- Сила стирания.
+- Undo / Redo.
+- Экспорт PNG 3000 x 3000.
+- Сохранение и открытие проекта .stamp.
+
+ЧТО ДОБАВИМ ДАЛЬШЕ
+
+- Инсталлятор.
+- Цифровую подпись.
+- Иконку приложения.
+- Слои.
+- SVG и PDF экспорт.
+- Библиотеку шаблонов.
+- Переключение языков интерфейса.
