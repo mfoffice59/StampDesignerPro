@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.rsuser
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vs/
+.vscode/.ropeproject
+
+# Releases
+Releases/
+publish/
+MacBuild/
+
+# Logs
+*.log
