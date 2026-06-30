@@ -1,0 +1,14 @@
+{
+  "pack_id": "symbols_starter",
+  "version": "0.1",
+  "items": [
+    {
+      "id": "uz_emblem_placeholder_blue",
+      "name_ru": "Узбекистан - герб-заглушка синий",
+      "file": "State/Uzbekistan/uz_emblem_placeholder_blue.svg",
+      "category": "State",
+      "country": "Uzbekistan",
+      "official_exact": false
+    }
+  ]
+}
