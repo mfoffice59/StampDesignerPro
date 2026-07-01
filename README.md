@@ -4,7 +4,7 @@ Cross-platform stamp designer for Windows and macOS.
 
 ## Status
 
-**2.0 Alpha 1**
+**2.0 Alpha 2 Full**
 
 This repository is the new clean codebase for Stamp Designer Pro 2.0.
 
@@ -17,7 +17,7 @@ The new version is based on:
 - external symbol/template libraries
 - future AI-assisted stamp generation
 
-## Current Alpha 1 features
+## Current Alpha 2 features
 
 - cross-platform Avalonia project structure
 - basic stamp project model
@@ -27,6 +27,8 @@ The new version is based on:
 - editable main texts and key geometry parameters
 - external libraries folder structure
 - GitHub Actions for Windows and macOS builds
+- live preview update
+- fixed Avalonia XAML compatibility for GitHub Actions
 - roadmap for AI-assisted editing
 
 ## Roadmap

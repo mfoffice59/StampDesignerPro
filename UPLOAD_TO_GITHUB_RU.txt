@@ -1,17 +1,12 @@
-КАК ЗАГРУЗИТЬ В GITHUB
+КАК ЗАГРУЗИТЬ ALPHA 2 FULL
 
-1. Распакуйте архив.
-2. Откройте репозиторий StampDesignerPro на GitHub.
-3. Нажмите Add file - Upload files.
-4. Перетащите все содержимое папки StampDesignerPro_2_0_Alpha1.
-5. Нажмите Commit changes.
+1. Распакуйте ZIP.
+2. Откройте папку StampDesignerPro_2_0_Alpha2.
+3. На GitHub нажмите Add file - Upload files.
+4. Загрузите содержимое этой папки поверх текущего репозитория.
+5. Commit changes.
+6. Перейдите во вкладку Actions и дождитесь новой сборки.
 
 Важно:
-Папка .github может быть скрытой.
-Если она не загрузится через браузер:
-- создайте файл вручную:
-  .github/workflows/build-release.yml
-- вставьте содержимое из локального файла build-release.yml.
-
-После загрузки:
-GitHub - Actions - Build Stamp Designer Pro - Run workflow.
+- Если .github скрыта на macOS, не страшно: workflow уже создан в репозитории.
+- Главное обновить папку src и файлы README.md / CHANGELOG.md.
