@@ -1,21 +1,107 @@
-<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="StampDesignerPro.Views.MainWindow" Title="Stamp Designer Pro 2.0 Alpha 1" Width="1500" Height="940" MinWidth="1100" MinHeight="720">
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="StampDesignerPro.Views.MainWindow"
+        Title="Stamp Designer Pro 2.0 Alpha 2"
+        Width="1500"
+        Height="940"
+        MinWidth="1100"
+        MinHeight="720">
   <Grid ColumnDefinitions="540,*">
-    <ScrollViewer Grid.Column="0" Padding="16"><StackPanel Spacing="9">
-      <TextBlock Text="Stamp Designer Pro" FontSize="24" FontWeight="Bold"/><TextBlock Text="2.0 Alpha 1" Foreground="Gray"/>
-      <TextBlock Text="Стиль внешнего кольца"/><ComboBox Name="OuterStyleBox" SelectedIndex="0"><ComboBoxItem Content="Двойной круг"/><ComboBoxItem Content="Синяя полоса"/></ComboBox>
-      <TextBlock Text="Цвет HEX"/><TextBox Name="ColorBox" Text="#003f9e"/><CheckBox Name="TransparentBox" Content="Прозрачный фон" IsChecked="True"/>
-      <TextBlock Text="Текст синей полосы"/><TextBox Name="BandTextBox" Text="O‘ZBEKISTON RESPUBLIKASI - MChJ «SIZNING NOMINGIZ»"/>
-      <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Grid.Column="0"><TextBlock Text="Ширина полосы"/><TextBox Name="BandWidthBox" Text="54"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Радиус полосы"/><TextBox Name="BandRadiusBox" Text="333"/></StackPanel></Grid>
-      <TextBlock Text="Размер текста полосы"/><TextBox Name="BandFontSizeBox" Text="25"/>
-      <TextBlock Text="Верхний текст"/><TextBox Name="TopTextBox" Text="«Sizning nomingiz» mas’uliyati cheklangan jamiyati"/>
-      <TextBlock Text="Нижний текст"/><TextBox Name="BottomTextBox" Text="O‘zbekiston Respublikasi - Toshkent shahri"/>
-      <TextBlock Text="Внутренний текст"/><TextBox Name="InnerTextBox" Text="STIR 000000000"/>
-      <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Grid.Column="0"><TextBlock Text="Размер текста"/><TextBox Name="FontSizeBox" Text="27"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Интервал букв"/><TextBox Name="LetterSpacingBox" Text="2"/></StackPanel></Grid>
-      <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Grid.Column="0"><TextBlock Text="Радиус текста"/><TextBox Name="TextRadiusBox" Text="285"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Размер внутреннего текста"/><TextBox Name="InnerFontSizeBox" Text="25"/></StackPanel></Grid>
-      <TextBlock Text="Радиус внутреннего текста"/><TextBox Name="InnerTextRadiusBox" Text="202"/>
-      <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Grid.Column="0"><TextBlock Text="Внешний радиус"/><TextBox Name="OuterRadiusBox" Text="345"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Второй радиус"/><TextBox Name="SecondRadiusBox" Text="323"/></StackPanel></Grid>
-      <Grid ColumnDefinitions="*,*" ColumnSpacing="8"><StackPanel Grid.Column="0"><TextBlock Text="Внутренний радиус"/><TextBox Name="InnerRadiusBox" Text="232"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Толщина линий"/><TextBox Name="LineWidthBox" Text="5"/></StackPanel></Grid>
-    </StackPanel></ScrollViewer>
-    <Border Grid.Column="1" Background="#F3F6FB" Padding="20"><Border Background="White" CornerRadius="12"><Panel Name="CanvasHost"/></Border></Border>
+    <ScrollViewer Grid.Column="0" Padding="16">
+      <StackPanel Spacing="9">
+        <TextBlock Text="Stamp Designer Pro" FontSize="24" FontWeight="Bold" />
+        <TextBlock Text="2.0 Alpha 2" Foreground="Gray" />
+
+        <TextBlock Text="Стиль внешнего кольца" />
+        <ComboBox Name="OuterStyleBox" SelectedIndex="0">
+          <ComboBoxItem Content="Двойной круг" />
+          <ComboBoxItem Content="Синяя полоса" />
+        </ComboBox>
+
+        <TextBlock Text="Цвет HEX" />
+        <TextBox Name="ColorBox" Text="#003f9e" />
+
+        <CheckBox Name="TransparentBox" Content="Прозрачный фон" IsChecked="True" />
+
+        <TextBlock Text="Текст синей полосы" />
+        <TextBox Name="BandTextBox" Text="O‘ZBEKISTON RESPUBLIKASI - MChJ «SIZNING NOMINGIZ»" />
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Ширина полосы" />
+            <TextBox Name="BandWidthBox" Text="54" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Радиус полосы" />
+            <TextBox Name="BandRadiusBox" Text="333" />
+          </StackPanel>
+        </Grid>
+
+        <TextBlock Text="Размер текста полосы" />
+        <TextBox Name="BandFontSizeBox" Text="25" />
+
+        <TextBlock Text="Верхний текст" />
+        <TextBox Name="TopTextBox" Text="«Sizning nomingiz» mas’uliyati cheklangan jamiyati" />
+
+        <TextBlock Text="Нижний текст" />
+        <TextBox Name="BottomTextBox" Text="O‘zbekiston Respublikasi - Toshkent shahri" />
+
+        <TextBlock Text="Внутренний текст" />
+        <TextBox Name="InnerTextBox" Text="STIR 000000000" />
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Размер текста" />
+            <TextBox Name="FontSizeBox" Text="27" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Интервал букв" />
+            <TextBox Name="LetterSpacingBox" Text="2" />
+          </StackPanel>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Радиус текста" />
+            <TextBox Name="TextRadiusBox" Text="285" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Размер внутреннего текста" />
+            <TextBox Name="InnerFontSizeBox" Text="25" />
+          </StackPanel>
+        </Grid>
+
+        <TextBlock Text="Радиус внутреннего текста" />
+        <TextBox Name="InnerTextRadiusBox" Text="202" />
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Внешний радиус" />
+            <TextBox Name="OuterRadiusBox" Text="345" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Второй радиус" />
+            <TextBox Name="SecondRadiusBox" Text="323" />
+          </StackPanel>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Внутренний радиус" />
+            <TextBox Name="InnerRadiusBox" Text="232" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Толщина линий" />
+            <TextBox Name="LineWidthBox" Text="5" />
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Column="1" Background="#F3F6FB" Padding="20">
+      <Border Background="White" CornerRadius="12">
+        <Panel Name="CanvasHost" />
+      </Border>
+    </Border>
   </Grid>
 </Window>
