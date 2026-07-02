@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="StampDesignerPro.Views.MainWindow"
-        Title="Stamp Designer Pro 2.0 Alpha 2"
+        Title="Stamp Designer Pro - Logo Layer v1"
         Width="1500"
         Height="940"
         MinWidth="1100"
@@ -10,7 +10,7 @@
     <ScrollViewer Grid.Column="0" Padding="16">
       <StackPanel Spacing="9">
         <TextBlock Text="Stamp Designer Pro" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="2.0 Alpha 2" Foreground="Gray" />
+        <TextBlock Text="Logo Layer v1" Foreground="Gray" />
 
         <TextBlock Text="Стиль внешнего кольца" />
         <ComboBox Name="OuterStyleBox" SelectedIndex="0">
@@ -93,6 +93,23 @@
           <StackPanel Grid.Column="1" Margin="4,0,0,0">
             <TextBlock Text="Толщина линий" />
             <TextBox Name="LineWidthBox" Text="5" />
+          </StackPanel>
+        </Grid>
+
+        <Separator />
+        <TextBlock Text="Логотип" FontWeight="Bold" />
+        <Button Name="LoadLogoButton" Content="Загрузить логотип PNG/JPG" />
+        <Button Name="DeleteLogoButton" Content="Удалить логотип" />
+        <Button Name="CenterLogoButton" Content="Логотип в центр" />
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Размер логотипа" />
+            <TextBox Name="LogoSizeBox" Text="170" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Прозрачность логотипа" />
+            <TextBox Name="LogoOpacityBox" Text="100" />
           </StackPanel>
         </Grid>
       </StackPanel>
