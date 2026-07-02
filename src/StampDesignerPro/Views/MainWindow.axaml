@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="StampDesignerPro.Views.MainWindow"
-        Title="Stamp Designer Pro - Logo Layer v1"
+        Title="Stamp Designer Pro - Logo Move + Eraser v1"
         Width="1500"
         Height="940"
         MinWidth="1100"
@@ -10,7 +10,7 @@
     <ScrollViewer Grid.Column="0" Padding="16">
       <StackPanel Spacing="9">
         <TextBlock Text="Stamp Designer Pro" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="Logo Layer v1" Foreground="Gray" />
+        <TextBlock Text="Logo Move + Eraser v1" Foreground="Gray" />
 
         <TextBlock Text="Стиль внешнего кольца" />
         <ComboBox Name="OuterStyleBox" SelectedIndex="0">
@@ -104,12 +104,39 @@
 
         <Grid ColumnDefinitions="*,*">
           <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="X логотипа" />
+            <TextBox Name="LogoXBox" Text="0" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Y логотипа" />
+            <TextBox Name="LogoYBox" Text="25" />
+          </StackPanel>
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
             <TextBlock Text="Размер логотипа" />
             <TextBox Name="LogoSizeBox" Text="170" />
           </StackPanel>
           <StackPanel Grid.Column="1" Margin="4,0,0,0">
-            <TextBlock Text="Прозрачность логотипа" />
+            <TextBlock Text="Прозрачность" />
             <TextBox Name="LogoOpacityBox" Text="100" />
+          </StackPanel>
+        </Grid>
+
+        <TextBlock Text="Логотип можно двигать мышью на холсте. Колесо на холсте меняет размер логотипа." Foreground="Gray" TextWrapping="Wrap" />
+
+        <Separator />
+        <TextBlock Text="Ластик" FontWeight="Bold" />
+        <CheckBox Name="EraserModeBox" Content="Режим ластика" />
+        <Grid ColumnDefinitions="*,*">
+          <StackPanel Grid.Column="0" Margin="0,0,4,0">
+            <TextBlock Text="Размер ластика" />
+            <TextBox Name="EraserSizeBox" Text="24" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="4,0,0,0">
+            <TextBlock Text="Очистка" />
+            <Button Name="ClearEraserButton" Content="Очистить" />
           </StackPanel>
         </Grid>
       </StackPanel>

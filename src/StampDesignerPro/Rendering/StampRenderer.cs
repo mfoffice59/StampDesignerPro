@@ -40,9 +40,9 @@ public static class StampRenderer
         }
 
         DrawLogo(context, project, logoBitmap, cx, cy, scale);
-
         DrawTextOnCircleBottom(context, project.BottomText, cx, cy, project.TextRadius * scale, project.FontSize * scale, color, typeface, project.LetterSpacing * scale);
         DrawTextOnCircleTop(context, project.InnerText, cx, cy, project.InnerTextRadius * scale, project.InnerFontSize * scale, color, typeface, project.LetterSpacing * scale);
+        DrawEraser(context, project, cx, cy, scale);
     }
 
     static void DrawLogo(DrawingContext context, StampProject project, Bitmap? logoBitmap, double cx, double cy, double scale)
@@ -51,13 +51,22 @@ public static class StampRenderer
             return;
 
         var size = Math.Max(1, project.Logo.Size * scale);
-        var x = cx + project.Logo.X * scale - size / 2;
-        var y = cy + project.Logo.Y * scale - size / 2;
-        var rect = new Rect(x, y, size, size);
+        var rect = new Rect(cx + project.Logo.X * scale - size / 2, cy + project.Logo.Y * scale - size / 2, size, size);
         var opacity = Math.Clamp(project.Logo.Opacity / 100.0, 0, 1);
-
         using (context.PushOpacity(opacity))
             context.DrawImage(logoBitmap, rect);
+    }
+
+    static void DrawEraser(DrawingContext context, StampProject project, double cx, double cy, double scale)
+    {
+        if (!project.Eraser.Visible || project.Eraser.Points.Count == 0)
+            return;
+
+        foreach (var p in project.Eraser.Points)
+        {
+            var r = Math.Max(1, p.Size * scale / 2);
+            context.DrawEllipse(Brushes.White, null, new Point(cx + p.X * scale, cy + p.Y * scale), r, r);
+        }
     }
 
     static void DrawCircle(DrawingContext context, double cx, double cy, double r, Pen pen)

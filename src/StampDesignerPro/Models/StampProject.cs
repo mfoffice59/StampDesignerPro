@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace StampDesignerPro.Models;
 
 public sealed class StampProject
 {
-    public string Version { get; set; } = "2.0-logo-layer-v1";
+    public string Version { get; set; } = "2.0-logo-move-eraser-v1";
 
     public string TopText { get; set; } = "«Sizning nomingiz» mas’uliyati cheklangan jamiyati";
     public string BottomText { get; set; } = "O‘zbekiston Respublikasi - Toshkent shahri";
@@ -31,6 +33,7 @@ public sealed class StampProject
     public bool TransparentBackground { get; set; } = true;
 
     public LogoLayer Logo { get; set; } = new();
+    public EraserLayer Eraser { get; set; } = new();
 }
 
 public sealed class LogoLayer
@@ -41,4 +44,18 @@ public sealed class LogoLayer
     public double Size { get; set; } = 170;
     public double Opacity { get; set; } = 100;
     public bool Visible { get; set; } = true;
+}
+
+public sealed class EraserLayer
+{
+    public bool Visible { get; set; } = true;
+    public double Size { get; set; } = 24;
+    public List<EraserPoint> Points { get; set; } = new();
+}
+
+public sealed class EraserPoint
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    public double Size { get; set; }
 }
