@@ -1,21 +1,22 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="StampDesignerPro.Views.MainWindow"
-        Title="Stamp Designer Pro - UI Eraser Logo v3"
+        Title="Stamp Designer Pro - Full Logo + Eraser + UI v2"
         Width="1500"
         Height="940"
         MinWidth="1100"
         MinHeight="720"
-        Background="#F4F7FB">
+        Background="#EEF3FA">
   <Grid ColumnDefinitions="550,*">
     <ScrollViewer Grid.Column="0" Padding="14">
       <StackPanel Spacing="8">
         <TextBlock Text="Stamp Designer Pro" FontSize="24" FontWeight="Bold" />
-        <TextBlock Text="UI Eraser Logo v3" Foreground="#617083" />
+        <TextBlock Text="Full Logo + Eraser + UI v2" Foreground="Gray" />
 
-        <Border Classes="group">
+        <Border Classes="panel-card">
           <StackPanel Spacing="8">
             <TextBlock Text="Основные параметры" FontWeight="Bold" />
+            <TextBlock Text="Стиль внешнего кольца" />
             <ComboBox Name="OuterStyleBox" SelectedIndex="0">
               <ComboBoxItem Content="Двойной круг" />
               <ComboBoxItem Content="Синяя полоса" />
@@ -26,7 +27,27 @@
           </StackPanel>
         </Border>
 
-        <Border Classes="group">
+        <Border Classes="panel-card">
+          <StackPanel Spacing="8">
+            <TextBlock Text="Синяя полоса" FontWeight="Bold" />
+            <TextBlock Text="Текст синей полосы" />
+            <TextBox Name="BandTextBox" Text="O‘ZBEKISTON RESPUBLIKASI - MChJ «SIZNING NOMINGIZ»" />
+            <Grid ColumnDefinitions="*,*">
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Ширина полосы" />
+                <TextBox Name="BandWidthBox" Text="54" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Радиус полосы" />
+                <TextBox Name="BandRadiusBox" Text="333" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Text="Размер текста полосы" />
+            <TextBox Name="BandFontSizeBox" Text="25" />
+          </StackPanel>
+        </Border>
+
+        <Border Classes="panel-card">
           <StackPanel Spacing="8">
             <TextBlock Text="Текст" FontWeight="Bold" />
             <TextBlock Text="Верхний текст" />
@@ -35,6 +56,7 @@
             <TextBox Name="BottomTextBox" Text="O‘zbekiston Respublikasi - Toshkent shahri" />
             <TextBlock Text="Внутренний текст" />
             <TextBox Name="InnerTextBox" Text="STIR 000000000" />
+
             <Grid ColumnDefinitions="*,*">
               <StackPanel Grid.Column="0" Margin="0,0,4,0">
                 <TextBlock Text="Размер текста" />
@@ -45,84 +67,107 @@
                 <TextBox Name="LetterSpacingBox" Text="2" />
               </StackPanel>
             </Grid>
+
             <Grid ColumnDefinitions="*,*">
               <StackPanel Grid.Column="0" Margin="0,0,4,0">
                 <TextBlock Text="Радиус текста" />
                 <TextBox Name="TextRadiusBox" Text="285" />
               </StackPanel>
               <StackPanel Grid.Column="1" Margin="4,0,0,0">
-                <TextBlock Text="Внутренний размер" />
+                <TextBlock Text="Размер внутреннего текста" />
                 <TextBox Name="InnerFontSizeBox" Text="25" />
               </StackPanel>
             </Grid>
+
             <TextBlock Text="Радиус внутреннего текста" />
             <TextBox Name="InnerTextRadiusBox" Text="202" />
           </StackPanel>
         </Border>
 
-        <Border Classes="group">
+        <Border Classes="panel-card">
           <StackPanel Spacing="8">
-            <TextBlock Text="Окружности и полоса" FontWeight="Bold" />
-            <TextBlock Text="Текст синей полосы" />
-            <TextBox Name="BandTextBox" Text="O‘ZBEKISTON RESPUBLIKASI - MChJ «SIZNING NOMINGIZ»" />
+            <TextBlock Text="Окружности" FontWeight="Bold" />
             <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Внешний радиус" /><TextBox Name="OuterRadiusBox" Text="345" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Второй радиус" /><TextBox Name="SecondRadiusBox" Text="323" /></StackPanel>
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Внешний радиус" />
+                <TextBox Name="OuterRadiusBox" Text="345" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Второй радиус" />
+                <TextBox Name="SecondRadiusBox" Text="323" />
+              </StackPanel>
             </Grid>
             <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Внутренний радиус" /><TextBox Name="InnerRadiusBox" Text="232" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Толщина линий" /><TextBox Name="LineWidthBox" Text="5" /></StackPanel>
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Внутренний радиус" />
+                <TextBox Name="InnerRadiusBox" Text="232" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Толщина линий" />
+                <TextBox Name="LineWidthBox" Text="5" />
+              </StackPanel>
             </Grid>
-            <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Ширина полосы" /><TextBox Name="BandWidthBox" Text="54" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Радиус полосы" /><TextBox Name="BandRadiusBox" Text="333" /></StackPanel>
-            </Grid>
-            <TextBlock Text="Размер текста полосы" />
-            <TextBox Name="BandFontSizeBox" Text="25" />
           </StackPanel>
         </Border>
 
-        <Border Classes="group">
+        <Border Classes="panel-card">
           <StackPanel Spacing="8">
             <TextBlock Text="Логотип" FontWeight="Bold" />
             <Grid ColumnDefinitions="*,*">
-              <Button Grid.Column="0" Name="LoadLogoButton" Content="Загрузить логотип" Background="#E6F0FF" Foreground="#102A4C" Margin="0,0,4,0" />
-              <Button Grid.Column="1" Name="DeleteLogoButton" Content="Удалить" Background="#FFE9E9" Foreground="#621818" Margin="4,0,0,0" />
+              <Button Grid.Column="0" Name="LoadLogoButton" Content="Загрузить" Margin="0,0,4,0" />
+              <Button Grid.Column="1" Name="DeleteLogoButton" Content="Удалить" Margin="4,0,0,0" />
             </Grid>
-            <Button Name="CenterLogoButton" Content="В центр" Background="#E9F8EE" Foreground="#174D2B" />
+            <Button Name="CenterLogoButton" Content="Логотип в центр" />
+
             <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="X" /><TextBox Name="LogoXBox" Text="0" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Y" /><TextBox Name="LogoYBox" Text="25" /></StackPanel>
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="X" />
+                <TextBox Name="LogoXBox" Text="0" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Y" />
+                <TextBox Name="LogoYBox" Text="25" />
+              </StackPanel>
             </Grid>
+
             <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Размер" /><TextBox Name="LogoSizeBox" Text="170" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Прозрачность" /><TextBox Name="LogoOpacityBox" Text="100" /></StackPanel>
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Размер" />
+                <TextBox Name="LogoSizeBox" Text="170" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Прозрачность" />
+                <TextBox Name="LogoOpacityBox" Text="100" />
+              </StackPanel>
             </Grid>
-            <TextBlock Text="Перемещение - мышью по логотипу. Размер - колесом на холсте." Foreground="#617083" TextWrapping="Wrap" />
+
+            <TextBlock Text="Двигай логотип мышью. Колесо на холсте меняет размер." Foreground="Gray" TextWrapping="Wrap" />
           </StackPanel>
         </Border>
 
-        <Border Classes="group">
+        <Border Classes="panel-card">
           <StackPanel Spacing="8">
             <TextBlock Text="Ластик" FontWeight="Bold" />
             <CheckBox Name="EraserModeBox" Content="Включить ластик" />
             <Grid ColumnDefinitions="*,*">
-              <StackPanel Grid.Column="0" Margin="0,0,4,0"><TextBlock Text="Размер" /><TextBox Name="EraserSizeBox" Text="32" /></StackPanel>
-              <StackPanel Grid.Column="1" Margin="4,0,0,0"><TextBlock Text="Непрозрачность" /><TextBox Name="EraserOpacityBox" Text="100" /></StackPanel>
+              <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                <TextBlock Text="Размер" />
+                <TextBox Name="EraserSizeBox" Text="28" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                <TextBlock Text="Очистка" />
+                <Button Name="ClearEraserButton" Content="Очистить" />
+              </StackPanel>
             </Grid>
-            <Grid ColumnDefinitions="*,*">
-              <Button Grid.Column="0" Name="UndoEraserButton" Content="Назад" Background="#FFF7D7" Foreground="#4F3A00" Margin="0,0,4,0" />
-              <Button Grid.Column="1" Name="ClearEraserButton" Content="Очистить" Background="#FFE9E9" Foreground="#621818" Margin="4,0,0,0" />
-            </Grid>
-            <TextBlock Text="ЛКМ и вести - стирать. Колесо - размер. Shift+колесо - крупный шаг." Foreground="#617083" TextWrapping="Wrap" />
+            <TextBlock Text="В режиме ластика зажми левую кнопку мыши и веди по изображению." Foreground="Gray" TextWrapping="Wrap" />
           </StackPanel>
         </Border>
       </StackPanel>
     </ScrollViewer>
 
-    <Border Grid.Column="1" Background="#DEE8F4" Padding="22">
-      <Border Background="White" CornerRadius="14" BorderBrush="#B8C8DD" BorderThickness="1">
-        <Panel Name="CanvasHost" Background="White" />
+    <Border Grid.Column="1" Background="#DDE8F6" Padding="20">
+      <Border Background="White" CornerRadius="14" BorderBrush="#B9C8DD" BorderThickness="1">
+        <Panel Name="CanvasHost" />
       </Border>
     </Border>
   </Grid>
