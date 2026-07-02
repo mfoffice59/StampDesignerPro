@@ -11,7 +11,7 @@ public static class StampRenderer
 {
     public const double BaseSize = 800;
 
-    public static void Render(DrawingContext context, StampProject project, Rect bounds, Bitmap? logoBitmap = null)
+    public static void Render(DrawingContext context, StampProject project, Rect bounds, Bitmap? logoBitmap = null, bool showEraserCursor = false, Point? eraserCursor = null)
     {
         var scale = Math.Min(bounds.Width, bounds.Height) / BaseSize;
         var cx = bounds.X + bounds.Width / 2;
@@ -40,9 +40,14 @@ public static class StampRenderer
         }
 
         DrawLogo(context, project, logoBitmap, cx, cy, scale);
+
         DrawTextOnCircleBottom(context, project.BottomText, cx, cy, project.TextRadius * scale, project.FontSize * scale, color, typeface, project.LetterSpacing * scale);
         DrawTextOnCircleTop(context, project.InnerText, cx, cy, project.InnerTextRadius * scale, project.InnerFontSize * scale, color, typeface, project.LetterSpacing * scale);
-        DrawEraser(context, project, cx, cy, scale);
+
+        DrawEraserMask(context, project, cx, cy, scale);
+
+        if (showEraserCursor && eraserCursor != null)
+            DrawEraserCursor(context, project, eraserCursor.Value, scale);
     }
 
     static void DrawLogo(DrawingContext context, StampProject project, Bitmap? logoBitmap, double cx, double cy, double scale)
@@ -57,7 +62,7 @@ public static class StampRenderer
             context.DrawImage(logoBitmap, rect);
     }
 
-    static void DrawEraser(DrawingContext context, StampProject project, double cx, double cy, double scale)
+    static void DrawEraserMask(DrawingContext context, StampProject project, double cx, double cy, double scale)
     {
         if (!project.Eraser.Visible || project.Eraser.Points.Count == 0)
             return;
@@ -65,8 +70,16 @@ public static class StampRenderer
         foreach (var p in project.Eraser.Points)
         {
             var r = Math.Max(1, p.Size * scale / 2);
-            context.DrawEllipse(Brushes.White, null, new Point(cx + p.X * scale, cy + p.Y * scale), r, r);
+            var x = cx + p.X * scale;
+            var y = cy + p.Y * scale;
+            context.DrawEllipse(Brushes.White, null, new Point(x, y), r, r);
         }
+    }
+
+    static void DrawEraserCursor(DrawingContext context, StampProject project, Point p, double scale)
+    {
+        var r = Math.Max(1, project.Eraser.Size * scale / 2);
+        context.DrawEllipse(null, new Pen(Brushes.Gray, 1), p, r, r);
     }
 
     static void DrawCircle(DrawingContext context, double cx, double cy, double r, Pen pen)

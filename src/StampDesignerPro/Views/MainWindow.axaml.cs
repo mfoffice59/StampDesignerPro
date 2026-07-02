@@ -61,6 +61,7 @@ public sealed partial class MainWindow : Window
         DeleteLogoButton.Click += (_, _) => DeleteLogo();
         CenterLogoButton.Click += (_, _) => CenterLogo();
         ClearEraserButton.Click += (_, _) => ClearEraser();
+        EraserModeBox.IsCheckedChanged += (_, _) => preview.InvalidateVisual();
     }
 
     async System.Threading.Tasks.Task LoadLogoAsync()
@@ -172,7 +173,7 @@ public sealed partial class MainWindow : Window
         project.Logo.Size = ReadDouble(LogoSizeBox, 170);
         project.Logo.Opacity = ReadDouble(LogoOpacityBox, 100);
 
-        project.Eraser.Size = ReadDouble(EraserSizeBox, 24);
+        project.Eraser.Size = ReadDouble(EraserSizeBox, 28);
 
         preview.InvalidateVisual();
     }
@@ -207,29 +208,40 @@ public sealed class PreviewPanel : Control
     public Action? ProjectChanged { get; set; }
 
     bool draggingLogo;
+    bool erasing;
     Point lastPoint;
+    Point? eraserCursor;
 
     public PreviewPanel()
     {
+        Focusable = true;
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
         PointerReleased += OnPointerReleased;
         PointerWheelChanged += OnPointerWheelChanged;
+        PointerExited += (_, _) =>
+        {
+            eraserCursor = null;
+            InvalidateVisual();
+        };
     }
 
     public override void Render(DrawingContext context)
     {
         base.Render(context);
-        StampRenderer.Render(context, Project, Bounds, LogoBitmap);
+        StampRenderer.Render(context, Project, Bounds, LogoBitmap, GetEraserMode?.Invoke() == true, eraserCursor);
     }
 
     void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        Focus();
         var p = e.GetPosition(this);
         lastPoint = p;
 
         if (GetEraserMode?.Invoke() == true)
         {
+            erasing = true;
+            eraserCursor = p;
             AddEraserPoint(p);
             e.Pointer.Capture(this);
             e.Handled = true;
@@ -248,10 +260,17 @@ public sealed class PreviewPanel : Control
     {
         var p = e.GetPosition(this);
 
-        if (GetEraserMode?.Invoke() == true && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        if (GetEraserMode?.Invoke() == true)
         {
-            AddEraserPoint(p);
-            e.Handled = true;
+            eraserCursor = p;
+
+            if (erasing || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                AddEraserPoint(p);
+                e.Handled = true;
+            }
+
+            InvalidateVisual();
             return;
         }
 
@@ -272,12 +291,27 @@ public sealed class PreviewPanel : Control
     void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         draggingLogo = false;
+        erasing = false;
         e.Pointer.Capture(null);
+        e.Handled = true;
     }
 
     void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        if (LogoBitmap == null || GetEraserMode?.Invoke() == true)
+        if (GetEraserMode?.Invoke() == true)
+        {
+            var deltaE = e.Delta.Y > 0 ? 2 : -2;
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                deltaE *= 5;
+
+            Project.Eraser.Size = Math.Max(2, Project.Eraser.Size + deltaE);
+            ProjectChanged?.Invoke();
+            InvalidateVisual();
+            e.Handled = true;
+            return;
+        }
+
+        if (LogoBitmap == null)
             return;
 
         var delta = e.Delta.Y > 0 ? 6 : -6;

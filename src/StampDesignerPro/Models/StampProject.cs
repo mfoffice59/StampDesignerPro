@@ -4,7 +4,7 @@ namespace StampDesignerPro.Models;
 
 public sealed class StampProject
 {
-    public string Version { get; set; } = "2.0-logo-move-eraser-v1";
+    public string Version { get; set; } = "2.0-full-logo-eraser-ui-v2";
 
     public string TopText { get; set; } = "«Sizning nomingiz» mas’uliyati cheklangan jamiyati";
     public string BottomText { get; set; } = "O‘zbekiston Respublikasi - Toshkent shahri";
@@ -49,7 +49,7 @@ public sealed class LogoLayer
 public sealed class EraserLayer
 {
     public bool Visible { get; set; } = true;
-    public double Size { get; set; } = 24;
+    public double Size { get; set; } = 28;
     public List<EraserPoint> Points { get; set; } = new();
 }
 
