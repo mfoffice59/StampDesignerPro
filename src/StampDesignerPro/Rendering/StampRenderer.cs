@@ -11,15 +11,12 @@ public static class StampRenderer
 {
     public const double BaseSize = 800;
 
-    public static void Render(DrawingContext context, StampProject project, Rect bounds, Bitmap? logoBitmap = null, bool showEraserCursor = false, Point? eraserCursor = null)
+    public static void Render(DrawingContext context, StampProject project, Rect bounds, Bitmap? logoBitmap = null, bool eraserMode = false, Point? eraserCursor = null)
     {
+        context.FillRectangle(Brushes.White, bounds);
         var scale = Math.Min(bounds.Width, bounds.Height) / BaseSize;
         var cx = bounds.X + bounds.Width / 2;
         var cy = bounds.Y + bounds.Height / 2;
-
-        if (!project.TransparentBackground)
-            context.FillRectangle(Brushes.White, bounds);
-
         var color = ParseColor(project.StampColor);
         var brush = new SolidColorBrush(color);
         var typeface = new Typeface(project.FontFamily);
@@ -40,94 +37,72 @@ public static class StampRenderer
         }
 
         DrawLogo(context, project, logoBitmap, cx, cy, scale);
-
         DrawTextOnCircleBottom(context, project.BottomText, cx, cy, project.TextRadius * scale, project.FontSize * scale, color, typeface, project.LetterSpacing * scale);
         DrawTextOnCircleTop(context, project.InnerText, cx, cy, project.InnerTextRadius * scale, project.InnerFontSize * scale, color, typeface, project.LetterSpacing * scale);
-
-        DrawEraserMask(context, project, cx, cy, scale);
-
-        if (showEraserCursor && eraserCursor != null)
-            DrawEraserCursor(context, project, eraserCursor.Value, scale);
+        DrawEraser(context, project, cx, cy, scale);
+        if (eraserMode && eraserCursor != null) DrawEraserCursor(context, project, eraserCursor.Value, scale);
     }
 
     static void DrawLogo(DrawingContext context, StampProject project, Bitmap? logoBitmap, double cx, double cy, double scale)
     {
-        if (logoBitmap == null || !project.Logo.Visible)
-            return;
-
+        if (logoBitmap == null || !project.Logo.Visible) return;
         var size = Math.Max(1, project.Logo.Size * scale);
         var rect = new Rect(cx + project.Logo.X * scale - size / 2, cy + project.Logo.Y * scale - size / 2, size, size);
-        var opacity = Math.Clamp(project.Logo.Opacity / 100.0, 0, 1);
-        using (context.PushOpacity(opacity))
-            context.DrawImage(logoBitmap, rect);
+        using (context.PushOpacity(Math.Clamp(project.Logo.Opacity / 100.0, 0, 1))) context.DrawImage(logoBitmap, rect);
     }
 
-    static void DrawEraserMask(DrawingContext context, StampProject project, double cx, double cy, double scale)
+    static void DrawEraser(DrawingContext context, StampProject project, double cx, double cy, double scale)
     {
-        if (!project.Eraser.Visible || project.Eraser.Points.Count == 0)
-            return;
-
         foreach (var p in project.Eraser.Points)
         {
             var r = Math.Max(1, p.Size * scale / 2);
-            var x = cx + p.X * scale;
-            var y = cy + p.Y * scale;
-            context.DrawEllipse(Brushes.White, null, new Point(x, y), r, r);
+            using (context.PushOpacity(Math.Clamp(p.Opacity / 100.0, 0, 1)))
+                context.DrawEllipse(Brushes.White, null, new Point(cx + p.X * scale, cy + p.Y * scale), r, r);
         }
     }
 
     static void DrawEraserCursor(DrawingContext context, StampProject project, Point p, double scale)
     {
         var r = Math.Max(1, project.Eraser.Size * scale / 2);
-        context.DrawEllipse(null, new Pen(Brushes.Gray, 1), p, r, r);
+        context.DrawEllipse(null, new Pen(Brushes.DodgerBlue, 2), p, r, r);
+        context.DrawEllipse(null, new Pen(Brushes.White, 1), p, Math.Max(1, r - 2), Math.Max(1, r - 2));
     }
 
     static void DrawCircle(DrawingContext context, double cx, double cy, double r, Pen pen)
     {
-        if (r > 0)
-            context.DrawEllipse(null, pen, new Point(cx, cy), r, r);
+        if (r > 0) context.DrawEllipse(null, pen, new Point(cx, cy), r, r);
     }
 
     static void DrawTextOnCircleTop(DrawingContext context, string text, double cx, double cy, double radius, double size, Color color, Typeface typeface, double letterSpacing)
     {
-        if (string.IsNullOrWhiteSpace(text) || radius <= 1 || size <= 1)
-            return;
-
+        if (string.IsNullOrWhiteSpace(text) || radius <= 1 || size <= 1) return;
         var brush = new SolidColorBrush(color);
         var widths = MeasureChars(text, typeface, size, letterSpacing);
         var total = 0.0;
         foreach (var w in widths) total += w;
-
         var angle = -Math.PI / 2 - total / radius / 2;
-
         for (var i = 0; i < text.Length; i++)
         {
-            var ch = text[i].ToString();
             var a = widths[i] / radius;
             angle += a / 2;
-            DrawRotatedChar(context, ch, cx + radius * Math.Cos(angle), cy + radius * Math.Sin(angle), angle + Math.PI / 2, typeface, size, brush);
+            DrawRotatedChar(context, text[i].ToString(), cx + radius * Math.Cos(angle), cy + radius * Math.Sin(angle), angle + Math.PI / 2, typeface, size, brush);
             angle += a / 2;
         }
     }
 
     static void DrawTextOnCircleBottom(DrawingContext context, string text, double cx, double cy, double radius, double size, Color color, Typeface typeface, double letterSpacing)
     {
-        if (string.IsNullOrWhiteSpace(text) || radius <= 1 || size <= 1)
-            return;
-
+        if (string.IsNullOrWhiteSpace(text) || radius <= 1 || size <= 1) return;
         var brush = new SolidColorBrush(color);
         var widths = MeasureChars(text, typeface, size, letterSpacing);
         var total = 0.0;
         foreach (var w in widths) total += w;
-
         var angle = Math.PI / 2 + total / radius / 2;
-
         for (var i = 0; i < text.Length; i++)
         {
-            var ch = text[i].ToString();
             var a = widths[i] / radius;
             angle -= a / 2;
-            DrawRotatedChar(context, ch, cx + radius * Math.Cos(angle), cy + radius * Math.Sin(angle), angle - Math.PI / 2, typeface, size, brush);
+            DrawRotatedChar(context, text[i].ToString(), cx + radius * Math.Cos(angle), cy + radius * Math.Sin(angle), angle - Math.PI / 2, typeface, size, brush);
             angle -= a / 2;
         }
     }
@@ -146,13 +121,8 @@ public static class StampRenderer
     static void DrawRotatedChar(DrawingContext context, string ch, double x, double y, double rotateRadians, Typeface typeface, double size, IBrush brush)
     {
         var ft = CreateFormattedText(ch, typeface, size, brush);
-        var transform =
-            Matrix.CreateTranslation(-ft.Width / 2, -ft.Height / 2) *
-            Matrix.CreateRotation(rotateRadians) *
-            Matrix.CreateTranslation(x, y);
-
-        using (context.PushTransform(transform))
-            context.DrawText(ft, new Point(0, 0));
+        var transform = Matrix.CreateTranslation(-ft.Width / 2, -ft.Height / 2) * Matrix.CreateRotation(rotateRadians) * Matrix.CreateTranslation(x, y);
+        using (context.PushTransform(transform)) context.DrawText(ft, new Point(0, 0));
     }
 
     static FormattedText CreateFormattedText(string text, Typeface typeface, double size, IBrush brush)
@@ -162,7 +132,6 @@ public static class StampRenderer
 
     static Color ParseColor(string hex)
     {
-        try { return Color.Parse(hex); }
-        catch { return Color.FromRgb(0, 63, 158); }
+        try { return Color.Parse(hex); } catch { return Color.FromRgb(0, 63, 158); }
     }
 }

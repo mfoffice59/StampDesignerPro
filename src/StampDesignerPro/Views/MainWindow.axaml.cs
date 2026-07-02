@@ -19,12 +19,10 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
         CanvasHost.Children.Add(preview);
         preview.Project = project;
         preview.GetEraserMode = () => EraserModeBox.IsChecked ?? false;
-        preview.ProjectChanged = SyncLogoUiFromProject;
-
+        preview.ProjectChanged = SyncLogoAndEraserUiFromProject;
         RegisterEvents();
         ApplyFromUi();
     }
@@ -33,6 +31,7 @@ public sealed partial class MainWindow : Window
     {
         OuterStyleBox.SelectionChanged += (_, _) => ApplyFromUi();
         TransparentBox.IsCheckedChanged += (_, _) => ApplyFromUi();
+        EraserModeBox.IsCheckedChanged += (_, _) => preview.InvalidateVisual();
 
         foreach (var box in new[]
         {
@@ -40,28 +39,22 @@ public sealed partial class MainWindow : Window
             TopTextBox, BottomTextBox, InnerTextBox, FontSizeBox, LetterSpacingBox,
             TextRadiusBox, InnerFontSizeBox, InnerTextRadiusBox, OuterRadiusBox,
             SecondRadiusBox, InnerRadiusBox, LineWidthBox,
-            LogoXBox, LogoYBox, LogoSizeBox, LogoOpacityBox, EraserSizeBox
-        })
-        {
-            box.TextChanged += (_, _) => ApplyFromUi();
-        }
+            LogoXBox, LogoYBox, LogoSizeBox, LogoOpacityBox, EraserSizeBox, EraserOpacityBox
+        }) box.TextChanged += (_, _) => ApplyFromUi();
 
         foreach (var box in new[]
         {
             BandWidthBox, BandRadiusBox, BandFontSizeBox, FontSizeBox, LetterSpacingBox,
             TextRadiusBox, InnerFontSizeBox, InnerTextRadiusBox, OuterRadiusBox,
             SecondRadiusBox, InnerRadiusBox, LineWidthBox,
-            LogoXBox, LogoYBox, LogoSizeBox, LogoOpacityBox, EraserSizeBox
-        })
-        {
-            RegisterNumericWheel(box, 1);
-        }
+            LogoXBox, LogoYBox, LogoSizeBox, LogoOpacityBox, EraserSizeBox, EraserOpacityBox
+        }) RegisterNumericWheel(box, 1);
 
         LoadLogoButton.Click += async (_, _) => await LoadLogoAsync();
         DeleteLogoButton.Click += (_, _) => DeleteLogo();
         CenterLogoButton.Click += (_, _) => CenterLogo();
         ClearEraserButton.Click += (_, _) => ClearEraser();
-        EraserModeBox.IsCheckedChanged += (_, _) => preview.InvalidateVisual();
+        UndoEraserButton.Click += (_, _) => UndoEraser();
     }
 
     async System.Threading.Tasks.Task LoadLogoAsync()
@@ -70,16 +63,10 @@ public sealed partial class MainWindow : Window
         {
             Title = "Выберите логотип",
             AllowMultiple = false,
-            Filters =
-            {
-                new FileDialogFilter { Name = "Images", Extensions = { "png", "jpg", "jpeg", "bmp" } }
-            }
+            Filters = { new FileDialogFilter { Name = "Images", Extensions = { "png", "jpg", "jpeg", "bmp" } } }
         };
-
         var result = await dialog.ShowAsync(this);
-        if (result == null || result.Length == 0)
-            return;
-
+        if (result == null || result.Length == 0) return;
         try
         {
             logoBitmap?.Dispose();
@@ -96,11 +83,7 @@ public sealed partial class MainWindow : Window
                 Title = "Ошибка",
                 Width = 440,
                 Height = 170,
-                Content = new TextBlock
-                {
-                    Text = "Не удалось загрузить логотип:\n" + ex.Message,
-                    Margin = new Thickness(20)
-                }
+                Content = new TextBlock { Text = "Не удалось загрузить логотип:\n" + ex.Message, Margin = new Thickness(20) }
             }.ShowDialog(this);
         }
     }
@@ -119,8 +102,7 @@ public sealed partial class MainWindow : Window
     {
         project.Logo.X = 0;
         project.Logo.Y = 25;
-        SyncLogoUiFromProject();
-        preview.InvalidateVisual();
+        SyncLogoAndEraserUiFromProject();
     }
 
     void ClearEraser()
@@ -129,59 +111,57 @@ public sealed partial class MainWindow : Window
         preview.InvalidateVisual();
     }
 
-    void SyncLogoUiFromProject()
+    void UndoEraser()
+    {
+        if (project.Eraser.Points.Count > 0) project.Eraser.Points.RemoveAt(project.Eraser.Points.Count - 1);
+        preview.InvalidateVisual();
+    }
+
+    void SyncLogoAndEraserUiFromProject()
     {
         updatingUi = true;
         LogoXBox.Text = project.Logo.X.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
         LogoYBox.Text = project.Logo.Y.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
         LogoSizeBox.Text = project.Logo.Size.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+        EraserSizeBox.Text = project.Eraser.Size.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
         updatingUi = false;
         preview.InvalidateVisual();
     }
 
     void ApplyFromUi()
     {
-        if (updatingUi)
-            return;
-
+        if (updatingUi) return;
         project.OuterStyle = OuterStyleBox.SelectedIndex == 1 ? "band" : "double";
         project.StampColor = ColorBox.Text ?? "#003f9e";
         project.TransparentBackground = TransparentBox.IsChecked ?? true;
-
         project.BandText = BandTextBox.Text ?? "";
         project.BandWidth = ReadDouble(BandWidthBox, 54);
         project.BandRadius = ReadDouble(BandRadiusBox, 333);
         project.BandFontSize = ReadDouble(BandFontSizeBox, 25);
-
         project.TopText = TopTextBox.Text ?? "";
         project.BottomText = BottomTextBox.Text ?? "";
         project.InnerText = InnerTextBox.Text ?? "";
-
         project.FontSize = ReadDouble(FontSizeBox, 27);
         project.LetterSpacing = ReadDouble(LetterSpacingBox, 2);
         project.TextRadius = ReadDouble(TextRadiusBox, 285);
         project.InnerFontSize = ReadDouble(InnerFontSizeBox, 25);
         project.InnerTextRadius = ReadDouble(InnerTextRadiusBox, 202);
-
         project.OuterRadius = ReadDouble(OuterRadiusBox, 345);
         project.SecondRadius = ReadDouble(SecondRadiusBox, 323);
         project.InnerRadius = ReadDouble(InnerRadiusBox, 232);
         project.LineWidth = ReadDouble(LineWidthBox, 5);
-
         project.Logo.X = ReadDouble(LogoXBox, project.Logo.X);
         project.Logo.Y = ReadDouble(LogoYBox, project.Logo.Y);
         project.Logo.Size = ReadDouble(LogoSizeBox, 170);
         project.Logo.Opacity = ReadDouble(LogoOpacityBox, 100);
-
-        project.Eraser.Size = ReadDouble(EraserSizeBox, 28);
-
+        project.Eraser.Size = ReadDouble(EraserSizeBox, 32);
+        project.Eraser.Opacity = ReadDouble(EraserOpacityBox, 100);
         preview.InvalidateVisual();
     }
 
     static double ReadDouble(TextBox box, double fallback)
     {
-        if (double.TryParse((box.Text ?? "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v))
-            return v;
+        if (double.TryParse((box.Text ?? "").Replace(",", "."), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var v)) return v;
         return fallback;
     }
 
@@ -191,22 +171,19 @@ public sealed partial class MainWindow : Window
         {
             var current = ReadDouble(box, 0);
             var delta = e.Delta.Y > 0 ? step : -step;
-            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-                delta *= 10;
-
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift)) delta *= 10;
             box.Text = Math.Max(0, current + delta).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
             e.Handled = true;
         };
     }
 }
 
-public sealed class PreviewPanel : Control
+public sealed class PreviewPanel : Panel
 {
     public StampProject Project { get; set; } = new();
     public Bitmap? LogoBitmap { get; set; }
     public Func<bool>? GetEraserMode { get; set; }
     public Action? ProjectChanged { get; set; }
-
     bool draggingLogo;
     bool erasing;
     Point lastPoint;
@@ -214,16 +191,14 @@ public sealed class PreviewPanel : Control
 
     public PreviewPanel()
     {
+        Background = Brushes.White;
         Focusable = true;
+        ClipToBounds = true;
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
         PointerReleased += OnPointerReleased;
         PointerWheelChanged += OnPointerWheelChanged;
-        PointerExited += (_, _) =>
-        {
-            eraserCursor = null;
-            InvalidateVisual();
-        };
+        PointerExited += (_, _) => { eraserCursor = null; InvalidateVisual(); };
     }
 
     public override void Render(DrawingContext context)
@@ -237,7 +212,6 @@ public sealed class PreviewPanel : Control
         Focus();
         var p = e.GetPosition(this);
         lastPoint = p;
-
         if (GetEraserMode?.Invoke() == true)
         {
             erasing = true;
@@ -247,7 +221,6 @@ public sealed class PreviewPanel : Control
             e.Handled = true;
             return;
         }
-
         if (LogoBitmap != null && HitLogo(p))
         {
             draggingLogo = true;
@@ -259,30 +232,21 @@ public sealed class PreviewPanel : Control
     void OnPointerMoved(object? sender, PointerEventArgs e)
     {
         var p = e.GetPosition(this);
-
         if (GetEraserMode?.Invoke() == true)
         {
             eraserCursor = p;
-
-            if (erasing || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-            {
-                AddEraserPoint(p);
-                e.Handled = true;
-            }
-
+            if (erasing || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) AddEraserPoint(p);
             InvalidateVisual();
+            e.Handled = true;
             return;
         }
-
         if (draggingLogo)
         {
             var scale = GetScale();
             if (scale <= 0) return;
-
             Project.Logo.X += (p.X - lastPoint.X) / scale;
             Project.Logo.Y += (p.Y - lastPoint.Y) / scale;
             lastPoint = p;
-
             ProjectChanged?.Invoke();
             e.Handled = true;
         }
@@ -300,25 +264,17 @@ public sealed class PreviewPanel : Control
     {
         if (GetEraserMode?.Invoke() == true)
         {
-            var deltaE = e.Delta.Y > 0 ? 2 : -2;
-            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-                deltaE *= 5;
-
-            Project.Eraser.Size = Math.Max(2, Project.Eraser.Size + deltaE);
+            var delta = e.Delta.Y > 0 ? 2 : -2;
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Shift)) delta *= 5;
+            Project.Eraser.Size = Math.Max(2, Project.Eraser.Size + delta);
             ProjectChanged?.Invoke();
-            InvalidateVisual();
             e.Handled = true;
             return;
         }
-
-        if (LogoBitmap == null)
-            return;
-
-        var delta = e.Delta.Y > 0 ? 6 : -6;
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            delta *= 3;
-
-        Project.Logo.Size = Math.Max(10, Project.Logo.Size + delta);
+        if (LogoBitmap == null) return;
+        var logoDelta = e.Delta.Y > 0 ? 6 : -6;
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift)) logoDelta *= 3;
+        Project.Logo.Size = Math.Max(10, Project.Logo.Size + logoDelta);
         ProjectChanged?.Invoke();
         e.Handled = true;
     }
@@ -328,14 +284,7 @@ public sealed class PreviewPanel : Control
         var scale = GetScale();
         var center = GetCenter();
         if (scale <= 0) return;
-
-        Project.Eraser.Points.Add(new EraserPoint
-        {
-            X = (p.X - center.X) / scale,
-            Y = (p.Y - center.Y) / scale,
-            Size = Project.Eraser.Size
-        });
-
+        Project.Eraser.Points.Add(new EraserPoint { X = (p.X - center.X) / scale, Y = (p.Y - center.Y) / scale, Size = Project.Eraser.Size, Opacity = Project.Eraser.Opacity });
         InvalidateVisual();
     }
 
@@ -344,18 +293,9 @@ public sealed class PreviewPanel : Control
         var scale = GetScale();
         var center = GetCenter();
         var size = Project.Logo.Size * scale;
-        var x = center.X + Project.Logo.X * scale - size / 2;
-        var y = center.Y + Project.Logo.Y * scale - size / 2;
-        return new Rect(x, y, size, size).Contains(p);
+        return new Rect(center.X + Project.Logo.X * scale - size / 2, center.Y + Project.Logo.Y * scale - size / 2, size, size).Contains(p);
     }
 
-    double GetScale()
-    {
-        return Math.Min(Bounds.Width, Bounds.Height) / StampRenderer.BaseSize;
-    }
-
-    Point GetCenter()
-    {
-        return new Point(Bounds.Width / 2, Bounds.Height / 2);
-    }
+    double GetScale() => Math.Min(Bounds.Width, Bounds.Height) / StampRenderer.BaseSize;
+    Point GetCenter() => new Point(Bounds.Width / 2, Bounds.Height / 2);
 }
